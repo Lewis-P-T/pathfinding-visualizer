@@ -10,10 +10,18 @@
   <header>
     <h1>Pathfinding Visualizer</h1>
     <div class="controls">
+      <fieldset class="tools">
+        <legend>Tool</legend>
+        <label><input type="radio" name="tool" value="wall" checked> Wall</label>
+        <label><input type="radio" name="tool" value="erase"> Erase</label>
+      </fieldset>
+      <label>Speed <input type="range" id="speed" min="1" max="10" value="6"></label>
       <button id="run">Run BFS</button>
-      <span id="stats" aria-live="polite">Click or drag on the grid to draw walls.</span>
+      <button id="clear-path">Clear path</button>
+      <button id="clear-walls">Clear walls</button>
     </div>
   </header>
+  <p id="stats" aria-live="polite">Draw walls; drag the green start or red goal to move them.</p>
   <div id="grid" role="grid" aria-label="Pathfinding grid"></div>
   <script src="algo.js"></script>
   <script src="script.js"></script>

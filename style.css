@@ -13,3 +13,7 @@ button:hover { background: #475569; }
 .cell.path { background: var(--path); }
 .cell.start { background: var(--start); }
 .cell.goal { background: var(--goal); }
+.tools { display: flex; gap: 8px; border: 1px solid #475569; border-radius: 6px; padding: 2px 8px; margin: 0; }
+.tools legend { font-size: .75rem; padding: 0 4px; }
+#stats { margin: 0 0 10px; min-height: 1.2em; }
+.cell.start, .cell.goal { cursor: grab; }
