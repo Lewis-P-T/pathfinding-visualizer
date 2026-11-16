@@ -1,0 +1,15 @@
+:root { --bg: #0f172a; --cell: #1e293b; --wall: #94a3b8; --start: #22c55e; --goal: #ef4444; --visit: #1d4ed8; --path: #facc15; --text: #e2e8f0; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 16px; background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; }
+header { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+h1 { margin: 0; font-size: 1.4rem; }
+.controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+button { background: #334155; color: var(--text); border: 1px solid #475569; border-radius: 6px; padding: 6px 12px; cursor: pointer; }
+button:hover { background: #475569; }
+#grid { display: grid; gap: 1px; user-select: none; touch-action: none; max-width: 100%; }
+.cell { aspect-ratio: 1; background: var(--cell); }
+.cell.wall { background: var(--wall); }
+.cell.visited { background: var(--visit); }
+.cell.path { background: var(--path); }
+.cell.start { background: var(--start); }
+.cell.goal { background: var(--goal); }

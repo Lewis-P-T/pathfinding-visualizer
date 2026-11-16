@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pathfinding Visualizer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Pathfinding Visualizer</h1>
+    <div class="controls">
+      <button id="run">Run BFS</button>
+      <span id="stats" aria-live="polite">Click or drag on the grid to draw walls.</span>
+    </div>
+  </header>
+  <div id="grid" role="grid" aria-label="Pathfinding grid"></div>
+  <script src="algo.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
