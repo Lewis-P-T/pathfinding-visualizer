@@ -7,4 +7,4 @@
 - [x] 5. A* with Manhattan heuristic; algorithm picker and stats (visited count, path length, cost, time)
 - [x] 6. Maze generator (recursive backtracker) and random-walls button
 - [x] 7. Save/load named maps to localStorage, plus JSON export/import
-- [ ] 8. Compare mode: run all three algorithms on the same map and show a results table; polish + README
+- [x] 8. Compare mode: run all three algorithms on the same map and show a results table; polish + README

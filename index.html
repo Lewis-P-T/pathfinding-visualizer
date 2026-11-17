@@ -25,6 +25,7 @@
         </select>
       </label>
       <button id="run">Run</button>
+      <button id="compare">Compare all</button>
       <button id="clear-path">Clear path</button>
       <button id="clear-walls">Clear walls &amp; mud</button>
       <button id="maze">Maze</button>
@@ -42,6 +43,11 @@
   </header>
   <p id="stats" aria-live="polite">Draw walls or mud; drag the green start or red goal to move them.</p>
   <div id="grid" role="grid" aria-label="Pathfinding grid"></div>
+  <table id="results" hidden>
+    <caption>Compare: all algorithms on this map (best values highlighted)</caption>
+    <thead><tr><th>Algorithm</th><th>Visited</th><th>Path steps</th><th>Cost</th><th>Time (ms)</th></tr></thead>
+    <tbody></tbody>
+  </table>
   <script src="algo.js"></script>
   <script src="script.js"></script>
 </body>

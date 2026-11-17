@@ -24,3 +24,9 @@ input#map-name { background: #1e293b; color: var(--text); border: 1px solid #475
 .file-btn { background: #334155; border: 1px solid #475569; border-radius: 6px; padding: 6px 12px; cursor: pointer; }
 .file-btn:hover { background: #475569; }
 .maps { width: 100%; }
+#results { margin-top: 12px; border-collapse: collapse; min-width: 320px; }
+#results caption { text-align: left; padding-bottom: 6px; font-size: .9rem; }
+#results th, #results td { border: 1px solid #475569; padding: 4px 10px; text-align: right; }
+#results th:first-child, #results td:first-child { text-align: left; }
+#results td.best { color: var(--path); font-weight: 600; }
+@media (max-width: 600px) { body { padding: 8px; } .controls { gap: 6px; } }

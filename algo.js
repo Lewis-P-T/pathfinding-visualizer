@@ -147,4 +147,14 @@ function mapFromJSON(obj, rows, cols) {
 
 const ALGORITHMS = { bfs: { name: 'BFS', fn: bfs }, dijkstra: { name: 'Dijkstra', fn: dijkstra }, astar: { name: 'A*', fn: astar } };
 
-if (typeof module !== 'undefined') module.exports = { generateMaze, mapToJSON, mapFromJSON, bfs, dijkstra, astar, neighbors, pathCost, MinHeap, ALGORITHMS };
+// Run every algorithm on the same map; null path stats mean unreachable.
+function compareAll(grid, start, goal) {
+  return Object.entries(ALGORITHMS).map(([id, a]) => {
+    const t0 = (typeof performance !== 'undefined' ? performance : Date).now();
+    const { visited, path } = a.fn(grid, start, goal);
+    const ms = (typeof performance !== 'undefined' ? performance : Date).now() - t0;
+    return { id, name: a.name, visited: visited.length, steps: path.length ? path.length - 1 : null, cost: path.length ? pathCost(grid, path) : null, ms };
+  });
+}
+
+if (typeof module !== 'undefined') module.exports = { generateMaze, mapToJSON, mapFromJSON, bfs, dijkstra, astar, neighbors, pathCost, MinHeap, ALGORITHMS, compareAll };

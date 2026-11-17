@@ -105,6 +105,24 @@ gridEl.addEventListener('pointerover', (e) => { if (drag && e.target.dataset.r) 
 window.addEventListener('pointerup', () => { drag = null; });
 
 document.getElementById('run').addEventListener('click', run);
+
+// --- Compare mode ------------------------------------------------------
+const resultsEl = document.getElementById('results');
+document.getElementById('compare').addEventListener('click', () => {
+  stopAnim(); render();
+  const rows = compareAll(grid, start, goal);
+  const best = (f) => Math.min(...rows.map((x) => x[f]).filter((v) => v !== null));
+  const bv = best('visited'), bc = best('cost');
+  resultsEl.tBodies[0].replaceChildren(...rows.map((x) => {
+    const tr = document.createElement('tr');
+    [[x.name], [x.visited, x.visited === bv], [x.steps ?? '—'], [x.cost ?? 'no path', x.cost !== null && x.cost === bc], [x.ms.toFixed(2)]]
+      .forEach(([v, win]) => { const td = tr.insertCell(); td.textContent = v; if (win) td.className = 'best'; });
+    return tr;
+  }));
+  resultsEl.hidden = false;
+  // Show the selected algorithm's search on the grid so the table has a visual.
+  run();
+});
 document.getElementById('clear-path').addEventListener('click', () => { stopAnim(); render(); statsEl.textContent = 'Path cleared.'; });
 document.getElementById('clear-walls').addEventListener('click', () => { stopAnim(); grid.walls.clear(); grid.weights.clear(); render(); statsEl.textContent = 'Walls and mud cleared.'; });
 
