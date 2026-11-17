@@ -27,6 +27,17 @@
       <button id="run">Run</button>
       <button id="clear-path">Clear path</button>
       <button id="clear-walls">Clear walls &amp; mud</button>
+      <button id="maze">Maze</button>
+      <button id="random">Random walls</button>
+    </div>
+    <div class="controls maps">
+      <input id="map-name" placeholder="Map name" maxlength="40">
+      <button id="save">Save</button>
+      <select id="saved" aria-label="Saved maps"></select>
+      <button id="load">Load</button>
+      <button id="delete">Delete</button>
+      <button id="export">Export JSON</button>
+      <label class="file-btn">Import JSON <input type="file" id="import" accept=".json,application/json" hidden></label>
     </div>
   </header>
   <p id="stats" aria-live="polite">Draw walls or mud; drag the green start or red goal to move them.</p>

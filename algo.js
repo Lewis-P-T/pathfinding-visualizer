@@ -104,6 +104,47 @@ function buildPath(prev, goal) {
   return path;
 }
 
+// Recursive backtracker (iterative, explicit stack). Rooms sit on even coordinates;
+// odd cells between two rooms are carved to connect them. Returns the wall Set.
+function generateMaze(rows, cols, rand = Math.random) {
+  const walls = new Set();
+  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) walls.add(r + ',' + c);
+  walls.delete('0,0');
+  const stack = [[0, 0]];
+  while (stack.length) {
+    const [r, c] = stack[stack.length - 1];
+    const opts = [[-2, 0], [2, 0], [0, -2], [0, 2]]
+      .map(([dr, dc]) => [r + dr, c + dc, r + dr / 2, c + dc / 2])
+      .filter(([nr, nc]) => nr >= 0 && nr < rows && nc >= 0 && nc < cols && walls.has(nr + ',' + nc));
+    if (!opts.length) { stack.pop(); continue; }
+    const [nr, nc, mr, mc] = opts[Math.floor(rand() * opts.length)];
+    walls.delete(mr + ',' + mc); walls.delete(nr + ',' + nc);
+    stack.push([nr, nc]);
+  }
+  return walls;
+}
+
+// Map <-> plain JSON. fromJSON validates everything because imports are untrusted.
+function mapToJSON(grid, start, goal) {
+  return { rows: grid.rows, cols: grid.cols, start, goal, walls: [...grid.walls], mud: [...grid.weights] };
+}
+
+function mapFromJSON(obj, rows, cols) {
+  const inBounds = (p) => Array.isArray(p) && Number.isInteger(p[0]) && Number.isInteger(p[1]) && p[0] >= 0 && p[0] < rows && p[1] >= 0 && p[1] < cols;
+  const parseKey = (k) => typeof k === 'string' && /^\d+,\d+$/.test(k) ? k.split(',').map(Number) : null;
+  if (!obj || obj.rows !== rows || obj.cols !== cols) throw new Error(`map must be ${rows}x${cols}`);
+  if (!inBounds(obj.start) || !inBounds(obj.goal)) throw new Error('bad start/goal');
+  if (!Array.isArray(obj.walls) || !Array.isArray(obj.mud)) throw new Error('missing walls/mud');
+  const walls = new Set(), weights = new Map();
+  for (const k of obj.walls) { if (!inBounds(parseKey(k))) throw new Error('bad wall ' + k); walls.add(k); }
+  for (const e of obj.mud) {
+    if (!Array.isArray(e) || !inBounds(parseKey(e[0])) || !(Number.isFinite(e[1]) && e[1] >= 1)) throw new Error('bad mud entry');
+    weights.set(e[0], e[1]);
+  }
+  walls.delete(key(obj.start)); walls.delete(key(obj.goal));
+  return { grid: { rows, cols, walls, weights }, start: [obj.start[0], obj.start[1]], goal: [obj.goal[0], obj.goal[1]] };
+}
+
 const ALGORITHMS = { bfs: { name: 'BFS', fn: bfs }, dijkstra: { name: 'Dijkstra', fn: dijkstra }, astar: { name: 'A*', fn: astar } };
 
-if (typeof module !== 'undefined') module.exports = { bfs, dijkstra, astar, neighbors, pathCost, MinHeap, ALGORITHMS };
+if (typeof module !== 'undefined') module.exports = { generateMaze, mapToJSON, mapFromJSON, bfs, dijkstra, astar, neighbors, pathCost, MinHeap, ALGORITHMS };
