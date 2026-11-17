@@ -1,9 +1,11 @@
 const ROWS = 20, COLS = 40;
-const grid = { rows: ROWS, cols: COLS, walls: new Set() };
+const MUD = 5; // cost to enter a mud cell (normal cells cost 1)
+const grid = { rows: ROWS, cols: COLS, walls: new Set(), weights: new Map() };
 let start = [10, 5], goal = [10, 34];
 const gridEl = document.getElementById('grid');
 const statsEl = document.getElementById('stats');
 const speedEl = document.getElementById('speed');
+const algoEl = document.getElementById('algo');
 const cells = [];
 
 gridEl.style.gridTemplateColumns = `repeat(${COLS}, minmax(0, 1fr))`;
@@ -23,7 +25,8 @@ const same = (a, r, c) => a[0] === r && a[1] === c;
 function render() {
   cells.forEach((el) => {
     const r = +el.dataset.r, c = +el.dataset.c;
-    el.className = 'cell' + (grid.walls.has(r + ',' + c) ? ' wall' : '');
+    const k = r + ',' + c;
+    el.className = 'cell' + (grid.walls.has(k) ? ' wall' : grid.weights.has(k) ? ' mud' : '');
     if (same(start, r, c)) el.classList.add('start');
     if (same(goal, r, c)) el.classList.add('goal');
   });
@@ -58,12 +61,15 @@ function animate(visited, path, done) {
 function run() {
   stopAnim();
   render();
-  const { visited, path } = bfs(grid, start, goal);
-  statsEl.textContent = 'Searching…';
+  const algo = ALGORITHMS[algoEl.value];
+  const t0 = performance.now();
+  const { visited, path } = algo.fn(grid, start, goal);
+  const ms = (performance.now() - t0).toFixed(2);
+  statsEl.textContent = `${algo.name}: searching…`;
   animate(visited, path, () => {
     statsEl.textContent = path.length
-      ? `Visited ${visited.length} cells — path length ${path.length - 1}`
-      : `No path found (visited ${visited.length})`;
+      ? `${algo.name}: visited ${visited.length} cells · path ${path.length - 1} steps · cost ${pathCost(grid, path)} · ${ms} ms`
+      : `${algo.name}: no path found (visited ${visited.length}) · ${ms} ms`;
   });
 }
 
@@ -79,7 +85,9 @@ function edit(el) {
     if (drag === 'start') start = [r, c]; else goal = [r, c];
   } else {
     if (same(start, r, c) || same(goal, r, c)) return;
-    drag === 'wall' ? grid.walls.add(k) : grid.walls.delete(k);
+    grid.walls.delete(k); grid.weights.delete(k);
+    if (drag === 'wall') grid.walls.add(k);
+    else if (drag === 'mud') grid.weights.set(k, MUD);
   }
   render();
 }
@@ -98,6 +106,6 @@ window.addEventListener('pointerup', () => { drag = null; });
 
 document.getElementById('run').addEventListener('click', run);
 document.getElementById('clear-path').addEventListener('click', () => { stopAnim(); render(); statsEl.textContent = 'Path cleared.'; });
-document.getElementById('clear-walls').addEventListener('click', () => { stopAnim(); grid.walls.clear(); render(); statsEl.textContent = 'Walls cleared.'; });
+document.getElementById('clear-walls').addEventListener('click', () => { stopAnim(); grid.walls.clear(); grid.weights.clear(); render(); statsEl.textContent = 'Walls and mud cleared.'; });
 
 render();
